@@ -362,3 +362,65 @@ canvas:active { cursor: grabbing; }
   .layout { grid-template-columns: 1fr; }
   .panel { border-radius: 24px; }
 }
+
+@media (max-width: 640px) {
+  body { background-attachment: scroll; }
+
+  .app-header {
+    padding: 20px 14px 4px;
+    gap: 12px;
+  }
+  .app-header p { font-size: 14px; }
+  h1 { font-size: 30px; }
+  .github-link {
+    align-self: flex-start;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .layout {
+    padding: 14px 12px calc(22px + env(safe-area-inset-bottom));
+    gap: 14px;
+  }
+  .panel { padding: 16px; border-radius: 22px; }
+  .field { margin-bottom: 17px; }
+
+  input[type="file"], select {
+    min-height: 48px;
+    font-size: 16px; /* prevents iOS focus zoom */
+  }
+
+  button {
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+
+  .button-row { gap: 8px; }
+  .button-row button { flex: 1 1 130px; }
+  .button-row .chip { flex: 1 1 96px; }
+
+  input[type="range"] {
+    min-height: 32px;
+    touch-action: pan-y;
+  }
+
+  .canvas-wrap {
+    width: 100%;
+    border-radius: 22px;
+  }
+  .processing-overlay { padding: 12px; }
+  .processing-card {
+    max-width: 100%;
+    font-size: 13px;
+    padding: 9px 12px;
+  }
+  .progress-wrap { width: 100%; margin-top: 12px; }
+  .app-footer { padding: 0 14px calc(24px + env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 380px) {
+  .panel { padding: 13px; }
+  .button-row .chip { flex-basis: 82px; }
+  .processing-card strong { display: none; }
+}

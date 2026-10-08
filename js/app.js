@@ -246,6 +246,9 @@ async function handleFileChange(event) {
     elements.zoomRange.value = 100;
     setStatus("Đã tải ảnh. Bạn có thể xoá phông rồi chọn nền trắng/xanh, hoặc chỉnh sáng trực tiếp.");
     render();
+    if (window.matchMedia("(max-width: 820px)").matches) {
+      elements.canvasWrap.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   } catch {
     setStatus("Không đọc được file ảnh này, bạn thử ảnh khác nhé.");
   }
