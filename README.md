@@ -2,10 +2,12 @@
 
 Ứng dụng web hỗ trợ tạo ảnh thẻ từ ảnh chân dung ngay trên trình duyệt.
 
+**Bản online (GitHub Pages):** https://adineban.github.io/app-lam-anh-the/
+
 ## Chức năng MVP
 
 - Tải ảnh chân dung lên
-- Xoá phông tự động
+- Xoá phông tự động với 2 chế độ: Nhanh (model nhỏ, thu ảnh về 1024px) và Chất lượng (model lớn hơn, giữ tới 1600px)
 - Thêm phông trắng hoặc phông xanh
 - Giữ nền gốc hoặc xuất nền trong suốt
 - Chọn kích thước 3x4, 4x6, 2x3, hộ chiếu 35x45 mm (xuất 300 DPI)

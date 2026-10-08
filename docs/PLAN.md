@@ -4,7 +4,7 @@
 
 - [x] Khởi tạo repo và giao diện web tĩnh
 - [x] Upload ảnh chân dung
-- [x] Xoá phông tự động trong trình duyệt
+- [x] Xoá phông tự động trong trình duyệt với chế độ Nhanh và Chất lượng
 - [x] Thêm phông trắng
 - [x] Thêm phông xanh
 - [x] Tuỳ chọn giữ nền gốc hoặc nền trong suốt
