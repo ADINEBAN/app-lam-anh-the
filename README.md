@@ -16,6 +16,7 @@
 - Tự động cân sáng
 - Tải ảnh PNG/JPG
 - Giao diện glassmorphism, hiệu ứng quét sáng trên ảnh và thanh tiến trình phần trăm khi xoá phông
+- Responsive cho mobile: nút dễ chạm, chống phóng to khi focus trên iOS, tự cuộn tới ảnh sau khi tải lên
 
 ## Cách chạy
 
