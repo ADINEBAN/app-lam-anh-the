@@ -82,9 +82,25 @@
     </section>
 
     <section class="panel preview" aria-label="Xem trước">
-      <div class="canvas-wrap">
+      <div id="canvasWrap" class="canvas-wrap">
         <canvas id="previewCanvas" width="354" height="472"></canvas>
         <div id="emptyState" class="empty-state">Chưa có ảnh<br /><span>Hãy chọn ảnh chân dung để bắt đầu</span></div>
+        <div id="processingOverlay" class="processing-overlay" aria-hidden="true">
+          <div class="processing-card">
+            <div class="processing-spinner"></div>
+            <strong>Đang xoá phông</strong>
+            <span id="processingPercent">0%</span>
+          </div>
+        </div>
+      </div>
+      <div id="progressWrap" class="progress-wrap" hidden>
+        <div class="progress-meta">
+          <span id="progressLabel">Đang xoá phông</span>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div id="progressTrack" class="progress-track" role="progressbar" aria-label="Tiến trình xoá phông" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
       </div>
       <p id="outputInfo" class="hint center">Kích thước xuất: 354 x 472 px</p>
     </section>
