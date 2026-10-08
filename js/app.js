@@ -86,7 +86,9 @@ function currentSize() {
 }
 
 function setStatus(message) {
-  elements.bgStatus.textContent = message;
+  if (elements.bgStatus) {
+    elements.bgStatus.textContent = message;
+  }
 }
 
 function setProgress(value, label = "Đang xoá phông") {
