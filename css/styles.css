@@ -48,14 +48,14 @@ body::after {
 body::before { left: -12vw; top: -12vw; background: rgba(255, 166, 88, .38); }
 body::after { right: -12vw; bottom: -14vw; background: rgba(84, 199, 255, .36); }
 
-#tsparticles {
+#vanta-bg {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: .9;
+  opacity: .78;
 }
-#tsparticles canvas { display: block; }
+#vanta-bg canvas { display: block; }
 
 .app-header, .layout, .app-footer {
   position: relative;
@@ -396,7 +396,7 @@ canvas:active { cursor: grabbing; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #tsparticles { opacity: .45; }
+  #vanta-bg { opacity: .35; }
   *, *::before, *::after {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
