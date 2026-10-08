@@ -15,6 +15,7 @@
 - Căn chỉnh ánh sáng: độ sáng, tương phản, độ bão hoà
 - Tự động cân sáng
 - Tải ảnh PNG/JPG
+- Giao diện glassmorphism, hiệu ứng quét sáng trên ảnh và thanh tiến trình phần trăm khi xoá phông
 
 ## Cách chạy
 

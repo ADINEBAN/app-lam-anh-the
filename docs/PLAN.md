@@ -13,6 +13,7 @@
 - [x] Căn chỉnh ánh sáng: độ sáng, tương phản, độ bão hoà
 - [x] Nút tự động cân sáng
 - [x] Tải ảnh PNG/JPG xuống
+- [x] Giao diện glassmorphism, hiệu ứng đang xử lý trên ảnh và thanh tiến trình phần trăm
 
 ## Sau MVP
 

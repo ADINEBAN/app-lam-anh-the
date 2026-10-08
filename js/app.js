@@ -26,6 +26,8 @@ const REMOVAL_MODES = {
 };
 
 let backgroundRemovalModulePromise = null;
+let progressValue = 0;
+let progressTimer = null;
 
 const elements = {
   fileInput: document.querySelector("#fileInput"),
@@ -47,6 +49,14 @@ const elements = {
   downloadPngBtn: document.querySelector("#downloadPngBtn"),
   downloadJpgBtn: document.querySelector("#downloadJpgBtn"),
   canvas: document.querySelector("#previewCanvas"),
+  canvasWrap: document.querySelector("#canvasWrap"),
+  processingOverlay: document.querySelector("#processingOverlay"),
+  processingPercent: document.querySelector("#processingPercent"),
+  progressWrap: document.querySelector("#progressWrap"),
+  progressTrack: document.querySelector("#progressTrack"),
+  progressBar: document.querySelector("#progressBar"),
+  progressPercent: document.querySelector("#progressPercent"),
+  progressLabel: document.querySelector("#progressLabel"),
   emptyState: document.querySelector("#emptyState"),
   outputInfo: document.querySelector("#outputInfo"),
   bgButtons: [...document.querySelectorAll("[data-bg]")],
@@ -77,6 +87,65 @@ function currentSize() {
 
 function setStatus(message) {
   elements.bgStatus.textContent = message;
+}
+
+function setProgress(value, label = "Đang xoá phông") {
+  progressValue = Math.max(0, Math.min(100, Math.round(value)));
+  elements.progressWrap.hidden = false;
+  elements.progressLabel.textContent = label;
+  elements.progressPercent.textContent = `${progressValue}%`;
+  elements.processingPercent.textContent = `${progressValue}%`;
+  elements.progressBar.style.width = `${progressValue}%`;
+  elements.progressTrack.setAttribute("aria-valuenow", String(progressValue));
+}
+
+function startProgress(label) {
+  stopProgress(false);
+  setProgress(0, label);
+  elements.canvasWrap.classList.add("is-processing");
+  elements.processingOverlay.setAttribute("aria-hidden", "false");
+
+  // The library reports download progress, but inference may not emit steady
+  // events. Creep slowly towards 90% so the bar still feels alive.
+  progressTimer = setInterval(() => {
+    if (progressValue < 90) {
+      setProgress(progressValue + Math.max(1, Math.round((90 - progressValue) * 0.035)), label);
+    }
+  }, 350);
+}
+
+function updateReportedProgress(current, total, label) {
+  if (!total) return;
+  const reported = (current / total) * 100;
+  if (reported > progressValue) setProgress(Math.min(92, reported), label);
+}
+
+function stopProgress(reset = true) {
+  if (progressTimer) {
+    clearInterval(progressTimer);
+    progressTimer = null;
+  }
+  elements.canvasWrap.classList.remove("is-processing");
+  elements.processingOverlay.setAttribute("aria-hidden", "true");
+  if (reset) {
+    progressValue = 0;
+    elements.progressWrap.hidden = true;
+    elements.progressBar.style.width = "0%";
+    elements.progressPercent.textContent = "0%";
+    elements.processingPercent.textContent = "0%";
+    elements.progressTrack.setAttribute("aria-valuenow", "0");
+  }
+}
+
+function finishProgress(label = "Đã xoá phông") {
+  if (progressTimer) {
+    clearInterval(progressTimer);
+    progressTimer = null;
+  }
+  setProgress(100, label);
+  elements.canvasWrap.classList.remove("is-processing");
+  elements.processingOverlay.setAttribute("aria-hidden", "true");
+  setTimeout(() => stopProgress(true), 900);
 }
 
 function updateControls() {
@@ -166,6 +235,7 @@ async function handleFileChange(event) {
   if (!file) return;
 
   try {
+    stopProgress(true);
     const { image } = await loadImageFromFile(file);
     state.originalImage = image;
     state.processedImage = null;
@@ -218,6 +288,9 @@ async function handleRemoveBackground() {
 
   const mode = REMOVAL_MODES[elements.removalMode.value] || REMOVAL_MODES.fast;
   elements.removeBgBtn.disabled = true;
+  elements.removalMode.disabled = true;
+  startProgress(`Đang xoá phông (${mode.label})`);
+  setProgress(2, `Đang xoá phông (${mode.label})`);
   setStatus(`Đang chuẩn bị chế độ ${mode.label.toLowerCase()}...`);
 
   try {
@@ -234,9 +307,11 @@ async function handleRemoveBackground() {
       device,
       output: { format: "image/png", quality: 1, type: "foreground" },
       progress: (key, current, total) => {
-        if (!total) return;
-        const percent = Math.min(99, Math.round((current / total) * 100));
-        setStatus(`Đang xoá phông (${mode.label}): ${percent}%`);
+        updateReportedProgress(current, total, `Đang xoá phông (${mode.label})`);
+        if (total) {
+          const percent = Math.min(99, Math.round((current / total) * 100));
+          setStatus(`Đang xoá phông (${mode.label}): ${percent}%`);
+        }
       },
     });
 
@@ -246,6 +321,7 @@ async function handleRemoveBackground() {
     } catch (gpuError) {
       if (!supportsGpu) throw gpuError;
       console.warn("GPU background removal failed, retrying with CPU", gpuError);
+      setProgress(Math.max(progressValue, 45), "Đang chuyển sang CPU");
       setStatus("GPU chưa dùng được, đang chuyển sang CPU...");
       blob = await removeBackground(workingBlob, makeConfig("cpu"));
     }
@@ -254,12 +330,17 @@ async function handleRemoveBackground() {
     state.backgroundRemoved = true;
     if (state.background === "original") state.background = "white";
     syncBackgroundButtons();
+    finishProgress("Đã xoá phông");
     setStatus(`Đã xoá phông xong bằng chế độ ${mode.label}. Giờ bạn chọn phông trắng hoặc phông xanh ở phía trên.`);
     render();
   } catch (error) {
     console.error(error);
+    stopProgress(true);
     setStatus("Chưa xoá phông được. Kiểm tra mạng ở lần tải model đầu tiên, hoặc thử lại với ảnh rõ mặt hơn.");
     updateControls();
+  } finally {
+    elements.removeBgBtn.disabled = !state.originalImage;
+    elements.removalMode.disabled = false;
   }
 }
 
