@@ -14,7 +14,7 @@
 - [x] Nút tự động cân sáng
 - [x] Tải ảnh PNG/JPG xuống
 - [x] Giao diện kính trong suốt trên nền sáng, hiệu ứng đang xử lý trên ảnh và thanh tiến trình phần trăm
-- [x] Nền động tsParticles với hạt, sao và đường kết nối
+- [x] Nền động Vanta.js NET với mạng điểm và đường kết nối chuyển động
 - [x] Responsive mobile với breakpoint 640px và 380px
 
 ## Sau MVP
