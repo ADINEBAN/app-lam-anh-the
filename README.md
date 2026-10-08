@@ -16,7 +16,7 @@
 - Tự động cân sáng
 - Tải ảnh PNG/JPG
 - Giao diện kính trong suốt trên nền sáng, điểm nhấn cam/xanh dương, hiệu ứng quét sáng trên ảnh và thanh tiến trình phần trăm khi xoá phông
-- Nền động Vanta.js BIRDS: đàn chim chuyển động trên nền trong suốt, tự giảm mật độ trên mobile
+- Nền kính tĩnh trong suốt để app nhẹ hơn; bố cục chọn ảnh → chế độ xoá phông → ảnh xem trước → phông nền/chỉnh sửa, khung ảnh bám dính khi cuộn
 - Responsive cho mobile: nút dễ chạm, chống phóng to khi focus trên iOS, tự cuộn tới ảnh sau khi tải lên
 
 ## Cách chạy

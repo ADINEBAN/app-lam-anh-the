@@ -14,7 +14,7 @@
 - [x] Nút tự động cân sáng
 - [x] Tải ảnh PNG/JPG xuống
 - [x] Giao diện kính trong suốt trên nền sáng, hiệu ứng đang xử lý trên ảnh và thanh tiến trình phần trăm
-- [x] Nền động Vanta.js BIRDS với đàn chim chuyển động trên nền trong suốt
+- [x] Gỡ nền động để giảm lag, dùng nền kính tĩnh và khung xem trước bám dính khi chỉnh sửa
 - [x] Responsive mobile với breakpoint 640px và 380px
 
 ## Sau MVP
