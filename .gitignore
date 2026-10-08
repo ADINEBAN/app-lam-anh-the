@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Builds
+ dist/
+build/
+.next/
+out/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# OS / Editor
+.DS_Store
+.vscode/
+.idea/
