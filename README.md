@@ -16,6 +16,7 @@
 - Tự động cân sáng
 - Tải ảnh PNG/JPG
 - Giao diện kính trong suốt trên nền sáng, điểm nhấn cam/xanh dương, hiệu ứng quét sáng trên ảnh và thanh tiến trình phần trăm khi xoá phông
+- Nền động tsParticles: hạt/sao nhiều màu có đường kết nối, tự giảm mật độ trên mobile
 - Responsive cho mobile: nút dễ chạm, chống phóng to khi focus trên iOS, tự cuộn tới ảnh sau khi tải lên
 
 ## Cách chạy

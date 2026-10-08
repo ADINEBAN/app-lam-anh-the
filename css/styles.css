@@ -48,6 +48,20 @@ body::after {
 body::before { left: -12vw; top: -12vw; background: rgba(255, 166, 88, .38); }
 body::after { right: -12vw; bottom: -14vw; background: rgba(84, 199, 255, .36); }
 
+#tsparticles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .9;
+}
+#tsparticles canvas { display: block; }
+
+.app-header, .layout, .app-footer {
+  position: relative;
+  z-index: 1;
+}
+
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -91,7 +105,7 @@ h1 {
 
 .panel {
   position: relative;
-  background: linear-gradient(145deg, rgba(255,255,255,.38), rgba(255,255,255,.12) 48%, rgba(184, 219, 255, .18));
+  background: linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.07) 48%, rgba(184, 219, 255, .13));
   border: 1px solid var(--stroke);
   border-radius: 30px;
   padding: 22px;
@@ -141,7 +155,7 @@ input[type="file"], select {
   padding: 12px 14px;
   border: 1px solid var(--stroke);
   border-radius: 18px;
-  background: linear-gradient(145deg, rgba(255,255,255,.42), rgba(255,255,255,.16));
+  background: linear-gradient(145deg, rgba(255,255,255,.34), rgba(255,255,255,.10));
   color: var(--ink);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -10px 18px rgba(255,255,255,.12), 0 12px 26px rgba(58,79,112,.10);
   backdrop-filter: blur(18px) saturate(170%);
@@ -379,4 +393,13 @@ canvas:active { cursor: grabbing; }
   .panel { padding: 13px; }
   .button-row .chip { flex-basis: 82px; }
   .processing-card strong { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #tsparticles { opacity: .45; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }
