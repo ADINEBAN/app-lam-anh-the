@@ -12,9 +12,25 @@ const BACKGROUNDS = {
   transparent: null,
 };
 
+const REMOVAL_MODES = {
+  fast: {
+    label: "Nhanh",
+    model: "isnet_quint8",
+    maxDimension: 1024,
+  },
+  quality: {
+    label: "Chất lượng",
+    model: "isnet_fp16",
+    maxDimension: 1600,
+  },
+};
+
+let backgroundRemovalModulePromise = null;
+
 const elements = {
   fileInput: document.querySelector("#fileInput"),
   removeBgBtn: document.querySelector("#removeBgBtn"),
+  removalMode: document.querySelector("#removalMode"),
   bgStatus: document.querySelector("#bgStatus"),
   sizeSelect: document.querySelector("#sizeSelect"),
   zoomRange: document.querySelector("#zoomRange"),
@@ -65,7 +81,10 @@ function setStatus(message) {
 
 function updateControls() {
   const hasImage = Boolean(currentImage());
-  elements.removeBgBtn.disabled = !state.originalImage || state.backgroundRemoved;
+  elements.removeBgBtn.disabled = !state.originalImage;
+  elements.removeBgBtn.textContent = state.backgroundRemoved
+    ? "Xoá phông lại theo chế độ đã chọn"
+    : "Xoá phông tự động";
   elements.downloadPngBtn.disabled = !hasImage;
   elements.downloadJpgBtn.disabled = !hasImage;
   elements.emptyState.classList.toggle("hidden", hasImage);
@@ -162,28 +181,80 @@ async function handleFileChange(event) {
   }
 }
 
+function loadBackgroundRemovalModule() {
+  if (!backgroundRemovalModulePromise) {
+    backgroundRemovalModulePromise = import(
+      "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm"
+    );
+  }
+  return backgroundRemovalModulePromise;
+}
+
+async function createWorkingBlob(file, maxDimension) {
+  const image = state.originalImage;
+  if (!image) return file;
+
+  const width = image.naturalWidth || image.width;
+  const height = image.naturalHeight || image.height;
+  const maxSide = Math.max(width, height);
+  if (maxSide <= maxDimension) return file;
+
+  const scale = maxDimension / maxSide;
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(width * scale);
+  canvas.height = Math.round(height * scale);
+
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  const type = file.type === "image/png" ? "image/png" : "image/jpeg";
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, type, 0.92));
+  return blob || file;
+}
+
 async function handleRemoveBackground() {
   const file = elements.fileInput.files?.[0];
   if (!file) return;
 
+  const mode = REMOVAL_MODES[elements.removalMode.value] || REMOVAL_MODES.fast;
   elements.removeBgBtn.disabled = true;
-  setStatus("Đang xoá phông... Lần đầu có thể hơi lâu vì trình duyệt cần tải model.");
+  setStatus(`Đang chuẩn bị chế độ ${mode.label.toLowerCase()}...`);
 
   try {
-    const module = await import("https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm");
+    const module = await loadBackgroundRemovalModule();
     const removeBackground = module.removeBackground || module.default;
     if (typeof removeBackground !== "function") {
       throw new Error("Background removal function is unavailable");
     }
 
-    const blob = await removeBackground(file, {
-      output: { format: "image/png", quality: 1 },
+    const workingBlob = await createWorkingBlob(file, mode.maxDimension);
+    const supportsGpu = Boolean(navigator.gpu);
+    const makeConfig = (device) => ({
+      model: mode.model,
+      device,
+      output: { format: "image/png", quality: 1, type: "foreground" },
+      progress: (key, current, total) => {
+        if (!total) return;
+        const percent = Math.min(99, Math.round((current / total) * 100));
+        setStatus(`Đang xoá phông (${mode.label}): ${percent}%`);
+      },
     });
+
+    let blob;
+    try {
+      blob = await removeBackground(workingBlob, makeConfig(supportsGpu ? "gpu" : "cpu"));
+    } catch (gpuError) {
+      if (!supportsGpu) throw gpuError;
+      console.warn("GPU background removal failed, retrying with CPU", gpuError);
+      setStatus("GPU chưa dùng được, đang chuyển sang CPU...");
+      blob = await removeBackground(workingBlob, makeConfig("cpu"));
+    }
+
     state.processedImage = await loadImageFromBlob(blob);
     state.backgroundRemoved = true;
     if (state.background === "original") state.background = "white";
     syncBackgroundButtons();
-    setStatus("Đã xoá phông xong. Giờ bạn chọn phông trắng hoặc phông xanh ở phía trên.");
+    setStatus(`Đã xoá phông xong bằng chế độ ${mode.label}. Giờ bạn chọn phông trắng hoặc phông xanh ở phía trên.`);
     render();
   } catch (error) {
     console.error(error);
@@ -247,6 +318,13 @@ function canvasPoint(event) {
 
 elements.fileInput.addEventListener("change", handleFileChange);
 elements.removeBgBtn.addEventListener("click", handleRemoveBackground);
+elements.removalMode.addEventListener("change", () => {
+  if (!state.originalImage) return;
+  const mode = REMOVAL_MODES[elements.removalMode.value] || REMOVAL_MODES.fast;
+  setStatus(state.backgroundRemoved
+    ? `Đã chọn chế độ ${mode.label}. Bấm “Xoá phông lại” để áp dụng.`
+    : `Đã chọn chế độ ${mode.label}. Bấm “Xoá phông tự động” để bắt đầu.`);
+});
 elements.sizeSelect.addEventListener("change", render);
 elements.zoomRange.addEventListener("input", () => {
   state.zoom = Number(elements.zoomRange.value) / 100;

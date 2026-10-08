@@ -31,6 +31,11 @@
           <button type="button" class="chip" data-bg="blue">Phông xanh</button>
           <button type="button" class="chip" data-bg="transparent">Trong suốt</button>
         </div>
+        <label for="removalMode">Chế độ xoá phông</label>
+        <select id="removalMode">
+          <option value="fast" selected>Nhanh — model nhỏ, thu ảnh về 1024px</option>
+          <option value="quality">Chất lượng — model lớn hơn, giữ tới 1600px</option>
+        </select>
         <button id="removeBgBtn" type="button" class="primary" disabled>Xoá phông tự động</button>
         <p id="bgStatus" class="hint">Chọn một ảnh trước, sau đó bấm xoá phông nếu muốn đổi nền.</p>
       </div>
