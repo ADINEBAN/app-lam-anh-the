@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <div id="vanta-bg" aria-hidden="true"></div>
   <header class="app-header">
     <div>
       <h1>App Làm Ảnh Thẻ</h1>
@@ -17,7 +16,7 @@
   </header>
 
   <main class="layout">
-    <section class="panel controls" aria-label="Điều khiển">
+    <section class="panel start-panel" aria-label="Chọn ảnh và xoá phông">
       <div class="field">
         <label for="fileInput">1. Chọn ảnh chân dung</label>
         <input id="fileInput" type="file" accept="image/*" />
@@ -25,14 +24,7 @@
       </div>
 
       <div class="field">
-        <span class="field-title">2. Phông nền</span>
-        <div class="button-row" role="group" aria-label="Chọn phông nền">
-          <button type="button" class="chip" data-bg="original">Giữ nền gốc</button>
-          <button type="button" class="chip is-active" data-bg="white">Phông trắng</button>
-          <button type="button" class="chip" data-bg="blue">Phông xanh</button>
-          <button type="button" class="chip" data-bg="transparent">Trong suốt</button>
-        </div>
-        <label for="removalMode">Chế độ xoá phông</label>
+        <label for="removalMode">2. Chế độ xoá phông</label>
         <select id="removalMode">
           <option value="fast" selected>Nhanh — model nhỏ, thu ảnh về 1024px</option>
           <option value="quality">Chất lượng — model lớn hơn, giữ tới 1600px</option>
@@ -40,49 +32,9 @@
         <button id="removeBgBtn" type="button" class="primary" disabled>Xoá phông tự động</button>
         <p id="bgStatus" class="hint">Chọn một ảnh trước, sau đó bấm xoá phông nếu muốn đổi nền.</p>
       </div>
-
-      <div class="field">
-        <label for="sizeSelect">3. Kích thước ảnh thẻ</label>
-        <select id="sizeSelect">
-          <option value="3x4" selected>3 x 4 cm — 354 x 472 px (300 DPI)</option>
-          <option value="4x6">4 x 6 cm — 472 x 709 px (300 DPI)</option>
-          <option value="2x3">2 x 3 cm — 236 x 354 px (300 DPI)</option>
-          <option value="passport">Hộ chiếu 35 x 45 mm — 413 x 531 px</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <span class="field-title">4. Căn chỉnh ảnh</span>
-        <label>Phóng to / thu nhỏ <span id="zoomValue">100%</span></label>
-        <input id="zoomRange" type="range" min="50" max="250" value="100" />
-        <p class="hint">Kéo trực tiếp trên ảnh để di chuyển vị trí khuôn mặt.</p>
-        <button id="resetPositionBtn" type="button">Đặt lại vị trí</button>
-      </div>
-
-      <div class="field">
-        <span class="field-title">5. Ánh sáng và màu</span>
-        <label>Độ sáng <span id="brightnessValue">100%</span></label>
-        <input id="brightnessRange" type="range" min="50" max="160" value="100" />
-        <label>Tương phản <span id="contrastValue">100%</span></label>
-        <input id="contrastRange" type="range" min="50" max="160" value="100" />
-        <label>Độ bão hoà <span id="saturationValue">100%</span></label>
-        <input id="saturationRange" type="range" min="0" max="180" value="100" />
-        <div class="button-row">
-          <button id="autoEnhanceBtn" type="button">Tự động cân sáng</button>
-          <button id="resetLightBtn" type="button">Đặt lại</button>
-        </div>
-      </div>
-
-      <div class="field">
-        <span class="field-title">6. Xuất ảnh</span>
-        <div class="button-row">
-          <button id="downloadPngBtn" type="button" class="primary" disabled>Tải PNG</button>
-          <button id="downloadJpgBtn" type="button" class="primary" disabled>Tải JPG</button>
-        </div>
-      </div>
     </section>
 
-    <section class="panel preview" aria-label="Xem trước">
+    <section class="panel preview" aria-label="Xem trước ảnh">
       <div id="canvasWrap" class="canvas-wrap">
         <canvas id="previewCanvas" width="354" height="472"></canvas>
         <div id="emptyState" class="empty-state">Chưa có ảnh<br /><span>Hãy chọn ảnh chân dung để bắt đầu</span></div>
@@ -105,15 +57,64 @@
       </div>
       <p id="outputInfo" class="hint center">Kích thước xuất: 354 x 472 px</p>
     </section>
+
+    <section class="panel adjust-panel" aria-label="Chỉnh sửa ảnh">
+      <div class="field">
+        <span class="field-title">3. Phông nền</span>
+        <div class="button-row" role="group" aria-label="Chọn phông nền">
+          <button type="button" class="chip" data-bg="original">Giữ nền gốc</button>
+          <button type="button" class="chip is-active" data-bg="white">Phông trắng</button>
+          <button type="button" class="chip" data-bg="blue">Phông xanh</button>
+          <button type="button" class="chip" data-bg="transparent">Trong suốt</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="sizeSelect">4. Kích thước ảnh thẻ</label>
+        <select id="sizeSelect">
+          <option value="3x4" selected>3 x 4 cm — 354 x 472 px (300 DPI)</option>
+          <option value="4x6">4 x 6 cm — 472 x 709 px (300 DPI)</option>
+          <option value="2x3">2 x 3 cm — 236 x 354 px (300 DPI)</option>
+          <option value="passport">Hộ chiếu 35 x 45 mm — 413 x 531 px</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <span class="field-title">5. Căn chỉnh ảnh</span>
+        <label for="zoomRange">Phóng to / thu nhỏ <span id="zoomValue">100%</span></label>
+        <input id="zoomRange" type="range" min="50" max="250" value="100" />
+        <p class="hint">Kéo trực tiếp trên ảnh để di chuyển vị trí khuôn mặt.</p>
+        <button id="resetPositionBtn" type="button">Đặt lại vị trí</button>
+      </div>
+
+      <div class="field">
+        <span class="field-title">6. Ánh sáng và màu</span>
+        <label for="brightnessRange">Độ sáng <span id="brightnessValue">100%</span></label>
+        <input id="brightnessRange" type="range" min="50" max="160" value="100" />
+        <label for="contrastRange">Tương phản <span id="contrastValue">100%</span></label>
+        <input id="contrastRange" type="range" min="50" max="160" value="100" />
+        <label for="saturationRange">Độ bão hoà <span id="saturationValue">100%</span></label>
+        <input id="saturationRange" type="range" min="0" max="180" value="100" />
+        <div class="button-row">
+          <button id="autoEnhanceBtn" type="button">Tự động cân sáng</button>
+          <button id="resetLightBtn" type="button">Đặt lại</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-title">7. Xuất ảnh</span>
+        <div class="button-row">
+          <button id="downloadPngBtn" type="button" class="primary" disabled>Tải PNG</button>
+          <button id="downloadJpgBtn" type="button" class="primary" disabled>Tải JPG</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="app-footer">
     MVP chạy hoàn toàn bằng HTML/CSS/JavaScript. Chức năng xoá phông dùng thư viện chạy trong trình duyệt, cần internet ở lần đầu để tải model.
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.birds.min.js"></script>
-  <script src="js/background.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
