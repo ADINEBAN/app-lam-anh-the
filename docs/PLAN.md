@@ -14,7 +14,7 @@
 - [x] Nút tự động cân sáng
 - [x] Tải ảnh PNG/JPG xuống
 - [x] Giao diện kính trong suốt trên nền sáng, hiệu ứng đang xử lý trên ảnh và thanh tiến trình phần trăm
-- [x] Nền động Vanta.js NET với mạng điểm và đường kết nối chuyển động
+- [x] Nền động Vanta.js BIRDS với đàn chim chuyển động trên nền trong suốt
 - [x] Responsive mobile với breakpoint 640px và 380px
 
 ## Sau MVP
